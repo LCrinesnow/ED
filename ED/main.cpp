@@ -376,7 +376,11 @@ int main()
     
     
     for (int outter=0; outter<actualen; outter++) {
-        
+    
+        bsf = INF;
+        i = 0;
+        j = 0;
+        ex = ex2 = 0;
         int countifall=0;
         
         /// Read the query data from input file and calculate its statistic such as mean, std
@@ -384,18 +388,17 @@ int main()
         if( fp == NULL )
             error(2);
         orign=sax[outter].index*compressionrate*3;
+        cout<<"outter:"<<outter<<endl;
         i=0;
         int w=0;
         while(fscanf(fp,"%lf",&d) != EOF)
         {
             if ((i>orign-2)&&(i<orign+m)){
                 Q[w] = d;
-//                              cout<<d<<endl;
+//              cout<<d<<endl;
                 w++;
             }
             i++;
-            
-        
         }
         cout<<"原始序列"<<orign<<" "<<Q[0]<<Q[1]<<Q[2]<<Q[77]<<Q[78]<<Q[79]<<endl;
         fclose(fp);
@@ -455,6 +458,10 @@ int main()
         /// Read data file, one value at a time
         while(fscanf(qp,"%lf",&d) != EOF )
         {
+            if((i>orign-2)&&(i<orign+m)){
+                cout<<"d:"<<d<<endl;
+                continue;
+            }
             ex += d;
             ex2 += d*d;
             T[i%m] = d;
@@ -484,13 +491,20 @@ int main()
             i++;
         }
         fclose(qp);
+        disloc[outter].distance=sqrt(bsf);
+        disloc[outter].loc=orign;
+        t2 = clock();
+//        cout << "Location : " << loc << endl;
+//        cout << "Distance : " << sqrt(bsf) << endl;
+//        cout << "Data Scanned : " << i << endl;
+//        cout << "Total Execution Time : " << (t2-t1)/CLOCKS_PER_SEC << " sec" << endl;
+        
+    }
+    for (int test=0; test<actualen; test++) {
+        if(disloc[test].distance>1.5)
+            cout<<disloc[test].distance<<" "<<disloc[test].loc<<endl;
     }
     
-        t2 = clock();
 
-        cout << "Location : " << loc << endl;
-        cout << "Distance : " << sqrt(bsf) << endl;
-        cout << "Data Scanned : " << i << endl;
-        cout << "Total Execution Time : " << (t2-t1)/CLOCKS_PER_SEC << " sec" << endl;
-    
+  
 }
