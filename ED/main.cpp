@@ -217,6 +217,9 @@ double distance(double * Q, double * T , const int& j , const int& m , const dou
     for ( i = 0 ; i < m && sum < bsf ; i++ )
     {
         double x = (T[(order[i]+j)]-mean)/std;
+//        cout<<"T[(order[i]+j)]:"<<T[(order[i]+j)]<<endl;
+//        cout<<"order[i]+j:"<<order[i]+j<<endl;
+
         sum += (x-Q[i])*(x-Q[i]);
     }
     return sum;
@@ -311,7 +314,7 @@ int main()
     while (sax[kk].word[0]!='E') {
         Insert(saxtemp, sax[kk].word,3,kk,sax);
         kk++;
-        cout<<"kk:"<<kk<<endl;
+//        cout<<"kk:"<<kk<<endl;
     }
     /********************************
      sax根据count 由小到大排序
@@ -321,13 +324,42 @@ int main()
     int n;
     for (n=0;n<actualen;n++)
         cout<<n<<"排序后"<<sax[n].index<<" "<<sax[n].word[0]<<sax[n].word[1]<<sax[n].word[2]<<" "<<sax[n].count<<endl;
+    
+    int compressionrate=16;
+
     /********************************
      根据p找q
      开始Discord Detection的代码
      *******************************/
-
-    int compressionrate=16;
-
+//    FILE *fp;              // the input file pointer
+//    fp = fopen("/Users/rinesnow/Github/ED/ED/First.txt","r");//若想变成输入式参考上边代码
+//            if( fp == NULL )
+//                error(2);
+////    orign=sax[outter].index*compressionrate*3;
+//
+//    float BSFD=0;
+//    float NND=99999;
+//    int BSFL;
+//    for (int P=0; P<actualen;P++) {
+//        NND=99999;
+//        //sax[P].index*compressionrate*3
+//        for (int Q; Q<actualen; Q++) {
+//            
+//        //           if(abs(P)-abs(Q)>1)
+//        //               if (distance(<#_InputIter __first#>, <#_InputIter __last#>)<BSFD) {
+//        //                   break;
+//        //                 }
+//        //               else if(distance(<#_InputIter __first#>, <#_InputIter __last#>)<NND)
+//        //                    NND=distance(<#_InputIter __first#>, <#_InputIter __last#>);
+//        //        }
+//        /*   if (NND>BSFD) {
+//         BSFD=NND;
+//         BSFL=P;
+//         }
+//         }
+//         cout<<"result:"<<BSFL<<endl;*/
+//    }
+//}
 
         
         
@@ -359,7 +391,7 @@ int main()
     j = 0;
     ex = ex2 = 0;
     
-    m = 240;
+    m = 160;
     
     /// Array for keeping the query data
     Q = (double *)malloc(sizeof(double)*m);
@@ -388,7 +420,7 @@ int main()
         if( fp == NULL )
             error(2);
         orign=sax[outter].index*compressionrate*3;
-        cout<<"outter:"<<outter<<endl;
+//        cout<<"outter:"<<outter<<endl;
         i=0;
         int w=0;
         while(fscanf(fp,"%lf",&d) != EOF)
@@ -400,9 +432,11 @@ int main()
             }
             i++;
         }
+    
+
         cout<<"原始序列"<<orign<<" "<<Q[0]<<Q[1]<<Q[2]<<Q[77]<<Q[78]<<Q[79]<<endl;
         fclose(fp);
-        
+        cout<<"Q序列："<<endl;
         i=0;
         while(i<m)
         {
@@ -417,6 +451,7 @@ int main()
         mean = ex/m;
         std = ex2/m;
         std = sqrt(std-mean*mean);
+//        cout<<"mean:"<<mean<<" ex2:"<<ex2<<" std:"<<std<<" bsf:"<<bsf<<endl;
 
         /// Do z_normalixation on query data
         for( i = 0 ; i < m ; i++ )
@@ -438,16 +473,17 @@ int main()
         for( i=0; i<m; i++)
         {   Q[i] = Q_tmp[i].value;
             order[i] = Q_tmp[i].index;
+//            cout<<order[i]<<endl;
         }
         free(Q_tmp);
 
 
 
         /// Array for keeping the current data; Twice the size for removing modulo (circulation) in distance calculation
-        T = (double *)malloc(sizeof(double)*2*m);
+       //如果bu用calloc而用malloc那么因为order的不定序而存在访问未被初始化过的T数组值。导致48，96等值出现异常。
+        T = (double *)calloc(2*m,sizeof(double));
         if( T == NULL )
             error(1);
-
         double dist = 0;
         i = 0;
         j = 0;
@@ -455,31 +491,46 @@ int main()
         qp = fopen("/Users/rinesnow/Github/ED/ED/First.txt","r");//若想变成输入式参考上边代码
         if( qp == NULL )
             error(2);
-        /// Read data file, one value at a time
+        cout<<"buffer2序列:"<<endl;
+        //buffer2里面的数据点一个一个计算，先if以后排除自己
         while(fscanf(qp,"%lf",&d) != EOF )
         {
             if((i>orign-2)&&(i<orign+m)){
-                cout<<"d:"<<d<<endl;
+                
+                i++;
+//                cout<<"跳过的i："<<i<<endl;
                 continue;
             }
             ex += d;
             ex2 += d*d;
             T[i%m] = d;
             T[(i%m)+m] = d;
-            
+//            cout<<"ex:"<<ex<<" ex2:"<<ex2<<endl
+
+//            cout<<"i:"<<i<<endl;
+//            cout<<"d:"<<d<<endl;
+//            cout<<" T[i%m]:"<<T[i%m]<<" T[(i%m)+m]:"<<T[(i%m)+m]<<endl;
+
             /// If there is enough data in T, the ED distance can be calculated
             if( i >= m-1 )
             {
+//                cout<<"ex:"<<ex<<endl;
+//                cout<<"i:"<<i<<"dist:"<<dist<<endl;
+
                 /// the current starting location of T
                 j = (i+1)%m;
-                
                 /// Z_norm(T[i]) will be calculated on the fly
                 mean = ex/m;
                 std = ex2/m;
+//                cout<<"ex2/m:"<<std;
                 std = sqrt(std-mean*mean);
-                
+//                cout<<"mean:"<<mean<<" ex2:"<<ex2<<" std:"<<std<<" bsf:"<<bsf<<endl;
+//                cout<<"j:"<<j<<endl;
+
                 /// Calculate ED distance
                 dist = distance(Q,T,j,m,mean,std,order,bsf);
+//                cout<<"i:"<<i<<"dist:"<<dist<<endl;
+
                 if( dist < bsf )
                 {
                     bsf = dist;
@@ -487,10 +538,12 @@ int main()
                 }
                 ex -= T[j];
                 ex2 -= T[j]*T[j];
+//                cout<<"ex和ex2:"<<ex<<"  "<<ex2<<endl;
             }
             i++;
         }
         fclose(qp);
+    cout<<"dist:"<<bsf<<endl;
         disloc[outter].distance=sqrt(bsf);
         disloc[outter].loc=orign;
         t2 = clock();
@@ -498,13 +551,13 @@ int main()
 //        cout << "Distance : " << sqrt(bsf) << endl;
 //        cout << "Data Scanned : " << i << endl;
 //        cout << "Total Execution Time : " << (t2-t1)/CLOCKS_PER_SEC << " sec" << endl;
-        
+    
     }
     for (int test=0; test<actualen; test++) {
-        if(disloc[test].distance>1.5)
+        if(disloc[test].distance>8)
             cout<<disloc[test].distance<<" "<<disloc[test].loc<<endl;
     }
-    
 
-  
+
+//  
 }

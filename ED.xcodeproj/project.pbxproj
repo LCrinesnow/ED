@@ -25,8 +25,8 @@
 /* Begin PBXFileReference section */
 		2EECD1701B229E8B007B7C59 /* ED */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ED; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EECD1731B229E8B007B7C59 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		2EECD1801B248411007B7C59 /* First.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = First.txt; sourceTree = "<group>"; };
-		2EECD1811B248411007B7C59 /* FirstSymbol.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = FirstSymbol.txt; sourceTree = "<group>"; };
+		2EF44F491B38307D00ECAD61 /* First.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = First.txt; sourceTree = "<group>"; };
+		2EF44F4A1B38307D00ECAD61 /* FirstSymbol.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = FirstSymbol.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,8 +59,8 @@
 		2EECD1721B229E8B007B7C59 /* ED */ = {
 			isa = PBXGroup;
 			children = (
-				2EECD1801B248411007B7C59 /* First.txt */,
-				2EECD1811B248411007B7C59 /* FirstSymbol.txt */,
+				2EF44F491B38307D00ECAD61 /* First.txt */,
+				2EF44F4A1B38307D00ECAD61 /* FirstSymbol.txt */,
 				2EECD1731B229E8B007B7C59 /* main.cpp */,
 			);
 			path = ED;
